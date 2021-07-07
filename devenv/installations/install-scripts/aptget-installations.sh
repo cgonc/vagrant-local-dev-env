@@ -26,3 +26,14 @@ apt-get -y install net-tools
 echo "Installing unzip"
 apt-get -y install unzip
 
+echo "Installing unzip"
+apt-get -y install dos2unix
+
+echo "Installing xauth"
+apt-get -y install xorg
+apt-get -y install openbox
+apt-get -y install xauth
+
+export DISPLAY="127.0.0.1:10.0"
+echo $DISPLAY
+

@@ -1,17 +1,12 @@
-version: '3'
+version: '3.2'
 services:
   rabbitmq:
-    image: rabbitmq:management
+    image: rabbitmq:3.8.19-management-alpine
     ports:
      - "5672:5672"
      - "15672:15672"
-    networks:
-     - rabbitmq-cluster
     environment:
      - RABBITMQ_ERLANG_COOKIE=cluster_cookie
      - RABBITMQ_DEFAULT_USER=tuzel-rb-admin
      - RABBITMQ_DEFAULT_PASS=Netas2018
 
-networks:
-  rabbitmq-cluster:
-    driver: bridge

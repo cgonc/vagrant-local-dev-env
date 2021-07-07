@@ -6,7 +6,6 @@ VAGRANT_API_VERSION = "2"
 Vagrant.configure(VAGRANT_API_VERSION) do |config|
 
   config.vm.box = "ubuntu/xenial64"
-  #config.disksize.size = '40GB'
 
   config.vm.define :"vagrant-local-dev-env" do |t|
   end
@@ -30,14 +29,14 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
     vb.cpus = 4
   end
 
-  config.vm.synced_folder '.', '/vagrant', disabled: true
+  config.vm.synced_folder '.', '/vagrant', type: "virtualbox" , disabled: true
   config.vm.synced_folder "./devenv", "/devenv", type: "rsync"
 
   # put maven related files
   config.vm.provision "file", source: "devenv/installations/apache-maven/settings.xml", destination: "~/settings.xml"
 
   # Create a private network, which allows host-only access to the machine using a specific IP.
-  config.vm.network "private_network", ip: "192.168.33.81"
+  config.vm.network "private_network", ip: "192.168.33.10"
 
   # If errors occur, try running "vagrant provision" manually after "vagrant up"
   config.vm.provision :docker
@@ -47,7 +46,7 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
     inline: <<-SHELL
       echo "=============================================="
       echo "Dos2unix Converting..."
-      find /vagrant -name "*.sh" | xargs dos2unix
+      find /devenv -name "*.sh" | xargs dos2unix
       echo "=============================================="
   SHELL
 
@@ -92,10 +91,8 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
       echo "=============================================="
   SHELL
 
-
   if Vagrant.has_plugin?("vagrant-vbguest")
       config.vbguest.auto_update = false
   end
-
 
 end
