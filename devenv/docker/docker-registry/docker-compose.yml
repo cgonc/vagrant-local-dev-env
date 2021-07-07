@@ -1,0 +1,12 @@
+registry:
+  restart: always
+  image: registry:2
+  ports:
+    - 5000:5000
+  environment:
+    REGISTRY_AUTH: htpasswd
+    REGISTRY_AUTH_HTPASSWD_PATH: htpasswd
+    REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
+  volumes:
+    - /opt/docker-registry/data:/var/lib/registry
+    - /vagrant/softwaredevelopmentkit/docker/docker-registry/registry-auth/htpasswd:/htpasswd

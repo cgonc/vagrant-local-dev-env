@@ -1,0 +1,21 @@
+version: "3"
+services:
+  mysql-local-db:
+    container_name: mysql-local-db
+    image: mysql:8
+    labels:
+      - Mysql
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env
+    environment:
+      MYSQL_DATABASE: local
+      MYSQL_USER: localapp
+      MYSQL_PASSWORD: localapppasswd
+      MYSQL_ROOT_PASSWORD: localapppasswd
+    volumes:
+      - /local_mysql_data:/var/lib/mysql
+      - ./db-scripts:/db-scripts
+    networks:
+      - default

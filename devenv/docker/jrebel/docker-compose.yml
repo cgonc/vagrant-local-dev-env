@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  jrebel_licence_server:
+    build: .
+    restart: always
+    environment:
+      - PORT=9001
+    privileged: true
+    ports:
+     - "9013:9001"

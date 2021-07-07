@@ -1,0 +1,11 @@
+version: '3.0'
+services:
+  #
+  # Used for validating mail is sent as expected
+  # Host -> smtp
+  # Port -> 1025
+  #
+  smtp:
+    restart: always
+    image: mailhog/mailhog:latest
+    ports: [ "8025:8025","1025:1025" ]

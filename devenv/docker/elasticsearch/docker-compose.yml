@@ -1,0 +1,47 @@
+version: "3"
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.1
+    volumes:
+      - ./data:/usr/share/elasticsearch/data
+      - ./install-plugin.sh:/tmp/install-plugin.sh
+      - ecss_es_db:/ecss-es-database/
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "9203:9200"
+      - "9303:9300"
+    networks:
+      - backend
+    environment:
+      - discovery.type=single-node
+      - "xpack.security.enabled=false"
+      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
+    command:
+      - sh
+      - -c
+      - "./bin/elasticsearch-plugin list | grep -q zentity || ./bin/elasticsearch-plugin install https://zentity.io/releases/zentity-1.6.0-elasticsearch-7.6.1.zip;
+            ./bin/elasticsearch-plugin list | grep -q ingest-langdetect || ./bin/elasticsearch-plugin install https://github.com/spinscale/elasticsearch-ingest-langdetect/releases/download/7.6.1.1/ingest-langdetect-7.6.1.1.zip;
+            ./bin/elasticsearch-plugin list | grep -q analysis-kuromoji || ./bin/elasticsearch-plugin install analysis-kuromoji;
+            ./bin/elasticsearch-plugin list | grep -q analysis-phonetic || ./bin/elasticsearch-plugin install analysis-phonetic;
+            ./bin/elasticsearch-plugin list | grep -q analysis-smartcn || ./bin/elasticsearch-plugin install analysis-smartcn;
+            ./bin/elasticsearch-plugin list | grep -q analysis-icu || ./bin/elasticsearch-plugin install analysis-icu;
+            ./bin/elasticsearch-plugin list | grep -q analysis-nori || ./bin/elasticsearch-plugin install analysis-nori;
+            /usr/local/bin/./docker-entrypoint.sh elasticsearch -Elogger.level=WARN"
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.2.0
+    ports:
+      - "5601:5601"
+    networks:
+      - backend
+    environment:
+      SERVER_HOST: 0.0.0.0
+      ELASTICSEARCH_URL: http://elasticsearch:9300
+
+volumes:
+  ecss_es_db:
+    driver: local
+
+networks:
+  backend:
+    driver: bridge
